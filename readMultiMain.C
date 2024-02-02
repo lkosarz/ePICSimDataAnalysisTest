@@ -4,18 +4,18 @@
 #include <string>
 #include <vector>
 
-#include "readTreeSimMain.C"
+#include "readTreeSim.C"
 
-
+int readMultiMain(long nevents = -1);
 
 int main(int argc, char **argv)
 {
-	readMulti();
+	readMultiMain();
 
 	return 1;
 }
 
-int readMulti(long nevents = -1)
+int readMultiMain(long nevents)
 {
 
 	readTreeSim("data/files_neutron_E0.3GeV.list", "output/output_depthStudy_neutron_E0.3GeV.root", nevents);

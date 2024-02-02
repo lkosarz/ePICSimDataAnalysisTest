@@ -4,7 +4,9 @@
 #include <string>
 #include <vector>
 
+#ifdef __CINT__
 R__LOAD_LIBRARY(libfmt.so)
+#endif
 #include "fmt/core.h"
 
 #include "ROOT/RDataFrame.hxx"
@@ -84,12 +86,16 @@ R__LOAD_LIBRARY(libfmt.so)
 #include "EICutil.h"
 #include "BasicUtil.h"
 
+#ifdef __CINT__
+
 #pragma link C++ class vector<edm4hep::MCParticleData>+;
 #pragma link C++ class vector<eicd::ClusterData>+;
 #pragma link C++ class vector<podio::ObjectID>+;
 #pragma link C++ class vector<edm4hep::SimCalorimeterHitData>+;
 #pragma link C++ class vector<edm4eic::CalorimeterHitData>+;
 #pragma link C++ class vector<edm4hep::CaloHitContributionData>+;
+
+#endif
 
 //edm4hep::MCParticleCollectionData *MCParticles_data = 0;
 vector<edm4hep::MCParticleData> *MCParticles_data = 0;
@@ -180,7 +186,7 @@ int readTreeSim(TString list, TString ofname, long nevents)
 	delete nHCal_hitContrib_data;
 	delete nHCal_hitContrib_relToMCpart_data;*/
 
-	//delete output;
+	delete output;
 	delete chain;
 	//delete tree;
 
@@ -276,6 +282,8 @@ int MakeEvent(TTree *tree, unsigned ev)
 			}
 
 			//cout<<"hit contrib size = "<<contrib_data->size()<<endl;
+
+			delete contrib_data;
 
 		} // HcalEndcapNHits loop
 
@@ -643,6 +651,8 @@ int MakeEvent(TTree *tree, unsigned ev)
 			if(mcpart.getPDG() == 2112) h_MCpart_gen_Neutron_eta_norm->Fill(mcMom.Eta());
 		}
 
+		delete parents_check;
+
 	} // MCParticles loop
 
 
@@ -724,7 +734,7 @@ int MakeEvent(TTree *tree, unsigned ev)
 
 			}
 
-
+			delete contrib_data;
 
 		} // HcalEndcapNHits loop
 		
@@ -746,6 +756,10 @@ int MakeEvent(TTree *tree, unsigned ev)
 		h_nHCal_hit_Esum->Fill(hit_nHCal_Esum);
 		h_nHCal_hit_EsumCorr->Fill(hit_nHCal_Esum/nHCal_samp_frac);
 
+
+		delete MCParticles_fromContrib_data;
+		delete MCParticlesID_fromContrib_data;
+		delete MCParticle_to_hitContrib_map;
 
 	return 1;
 }

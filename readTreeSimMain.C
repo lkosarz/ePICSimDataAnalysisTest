@@ -4,7 +4,9 @@
 #include <string>
 #include <vector>
 
-//R__LOAD_LIBRARY(libfmt.so)
+#ifdef __CINT__
+R__LOAD_LIBRARY(libfmt.so)
+#endif
 #include "fmt/core.h"
 
 #include "ROOT/RDataFrame.hxx"
@@ -84,6 +86,8 @@
 #include "EICutil.h"
 #include "BasicUtil.h"
 
+#ifdef __CINT__
+
 #pragma link C++ class vector<edm4hep::MCParticleData>+;
 #pragma link C++ class vector<eicd::ClusterData>+;
 #pragma link C++ class vector<podio::ObjectID>+;
@@ -91,6 +95,12 @@
 #pragma link C++ class vector<edm4eic::CalorimeterHitData>+;
 #pragma link C++ class vector<edm4hep::CaloHitContributionData>+;
 
+#endif
+/*
+#pragma link C++ defined_in "edm4hep/MCParticleData.h";
+#pragma link C++ defined_in "edm4hep/SimCalorimeterHitData.h";
+#pragma link C++ defined_in "edm4hep/CaloHitContributionData.h";
+*/
 //edm4hep::MCParticleCollectionData *MCParticles_data = 0;
 vector<edm4hep::MCParticleData> *MCParticles_data = 0;
 vector<podio::ObjectID> *MCparents_data = 0;
@@ -108,7 +118,8 @@ using namespace TMath;
 //using namespace edm4eic;
 using namespace edm4hep;
 
-int readTreeSim(TString list = "data/test.list", TString ofname = "output/output_test.root", long nevents = -1);
+//int readTreeSim(TString list = "data/test.list", TString ofname = "output/output_test.root", long nevents = -1);
+int readTreeSim(TString list = "data/files_neutron_E0.3GeV.list", TString ofname = "output/output_test.root", long nevents = -1);
 int MakeEvent(TTree *tree, unsigned ev);
 
 
@@ -283,6 +294,8 @@ int MakeEvent(TTree *tree, unsigned ev)
 			}
 
 			//cout<<"hit contrib size = "<<contrib_data->size()<<endl;
+
+			delete contrib_data;
 
 		} // HcalEndcapNHits loop
 
@@ -651,6 +664,8 @@ int MakeEvent(TTree *tree, unsigned ev)
 			if(mcpart.getPDG() == 2112) h_MCpart_gen_Neutron_eta_norm->Fill(mcMom.Eta());
 		}
 
+		delete parents_check;
+
 	} // MCParticles loop
 
 
@@ -732,7 +747,7 @@ int MakeEvent(TTree *tree, unsigned ev)
 
 			}
 
-
+			delete contrib_data;
 
 		} // HcalEndcapNHits loop
 		
@@ -754,6 +769,10 @@ int MakeEvent(TTree *tree, unsigned ev)
 		h_nHCal_hit_Esum->Fill(hit_nHCal_Esum);
 		h_nHCal_hit_EsumCorr->Fill(hit_nHCal_Esum/nHCal_samp_frac);
 
+
+		delete MCParticles_fromContrib_data;
+		delete MCParticlesID_fromContrib_data;
+		delete MCParticle_to_hitContrib_map;
 
 	return 1;
 }
