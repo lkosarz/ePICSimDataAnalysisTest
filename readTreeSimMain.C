@@ -82,7 +82,6 @@ R__LOAD_LIBRARY(libfmt.so)
 
 #include "FileList.h"
 #include "HistogramsSim.h"
-#include "HistogramsDepthCheck.h"
 #include "EICutil.h"
 #include "BasicUtil.h"
 
@@ -152,7 +151,6 @@ int readTreeSim(TString list, TString ofname, long nevents)
 	output->cd();
 
 	CreateHistogamsSim();
-	CreateHistogamsDepthCheck();
 
 
     tree->SetBranchAddress("MCParticles", &MCParticles_data);
@@ -182,7 +180,6 @@ int readTreeSim(TString list, TString ofname, long nevents)
 	output->Write();
 
 	DeleteHistogamsSim();
-	DeleteHistogamsDepthCheck();
 
 	output->Close();
 
@@ -265,57 +262,11 @@ int MakeEvent(TTree *tree, unsigned ev)
 	if(debug) cout<<"HcalEndcapNHits size = "<<nHCal_data->size()<<endl;
 
 
-	GetMCParticleDataFromCaloHitContributions(MCParticles_data, nHCal_hitContrib_relToMCpart_data, MCParticles_fromContrib_data);
-	GetMCParticleIdFromCaloHitContributions(nHCal_hitContrib_relToMCpart_data, MCParticlesID_fromContrib_data);
-
-	CreateMCParticleToCaloHitContributionMap(MCParticles_data, nHCal_hitContrib_relToMCpart_data, MCParticle_to_hitContrib_map);
-
-		for (unsigned hit_iter = 0; hit_iter < nHCal_data->size(); ++hit_iter) {
-
-			//CalorimeterHit hit_nHCal =  nHCal_hits_frame[hit_iter];
-			SimCalorimeterHitData hit_nHCal_data = nHCal_data->at(hit_iter);
-
-			SimCalorimeterHit hit_nHCal = GetCaloSimHit(hit_nHCal_data);
-
-			if(!hit_nHCal.isAvailable())
-				cout<<"CalorimeterHit does not exist! index = "<<hit_nHCal<<endl;
-
-
-			vector<edm4hep::CaloHitContributionData> *contrib_data = new vector<edm4hep::CaloHitContributionData>;
-
-			GetCaloHitContributionsData(hit_nHCal_data, nHCal_hitContrib_data, nHCal_relToContrib_data, contrib_data);
-
-			if(debug) cout<<"hit contributions = "<<contrib_data->size()<<endl;
-
-			for (unsigned c = 0; c < contrib_data->size(); ++c) {
-
-				//cout<<"hit time = "<<contrib_data->at(c).getParticle<<endl;
-				//if(debug) cout<<"hit time = "<<contrib_data->at(c).time<<endl;
-			}
-
-			//cout<<"hit contrib size = "<<contrib_data->size()<<endl;
-
-			delete contrib_data;
-
-		} // HcalEndcapNHits loop
-
 		if(debug){
 			cout<<"MCParticles_fromContrib_data size = "<<MCParticles_fromContrib_data->size()<<endl;
 			cout<<"MCParticle_to_hitContrib_map size = "<<MCParticle_to_hitContrib_map->size()<<endl;
 		}
 
-		if(debug)
-		{
-			for (map<int, vector<int>>::iterator it = MCParticle_to_hitContrib_map->begin(); it != MCParticle_to_hitContrib_map->end(); ++it) {
-
-				cout<<"size[id="<<it->first<<"] ="<<it->second.size()<<endl;
-				for (int i = 0; i < it->second.size(); ++i) {
-
-					cout<<it->second[i]<<", ";
-				}
-				cout<<endl;
-			}
-		}
 
 
 
@@ -326,27 +277,6 @@ int MakeEvent(TTree *tree, unsigned ev)
 		//edm4hep::MCParticle mcpart =  MCParticles_frame.at(mc_iter);
 		edm4hep::MCParticleData mcpart_data =  MCParticles_data->at(mc_iter);
 		//edm4hep::MCParticleData mcpart_data =  MCParticles_fromContrib_data->at(mc_iter);
-
-		//if(!MCParticle_to_hitContrib_map->find(mc_iter)->second.size())	continue;
-		if(MCParticle_to_hitContrib_map->find(mc_iter)->second.size()==0 || MCParticle_to_hitContrib_map->find(mc_iter) == MCParticle_to_hitContrib_map->end() || !MCParticle_to_hitContrib_map->size())
-		{
-
-			if(debug) cout<<"Excluded mc_iter = "<<mc_iter<<"\t size = "<<MCParticle_to_hitContrib_map->find(mc_iter)->second.size()<<endl;
-
-			continue;
-		}
-		bool has_nHcalHit = false;
-
-		for (int i = 0; i < MCParticlesID_fromContrib_data->size(); ++i) {
-
-			if(MCParticlesID_fromContrib_data->at(i) ==  mc_iter) has_nHcalHit = true;
-		}
-
-		// Select only particles with nHCal hits
-		//if(!has_nHcalHit) continue;
-
-		if(debug) cout<<"Included mc_iter = "<<mc_iter<<"\t size = "<<MCParticle_to_hitContrib_map->find(mc_iter)->second.size()<<endl;
-
 
 		//edm4hep::MCParticle mcpart(mcpart_data.PDG, mcpart_data.generatorStatus, mcpart_data.simulatorStatus, mcpart_data.charge, mcpart_data.time, mcpart_data.mass, mcpart_data.vertex, mcpart_data.endpoint, mcpart_data.momentum, mcpart_data.momentumAtEndpoint, mcpart_data.spin, mcpart_data.colorFlow);
 
@@ -476,53 +406,10 @@ int MakeEvent(TTree *tree, unsigned ev)
 		if(mcpart.getPDG() == 22) h_MCpart_Gamma_E->Fill(mcpart.getEnergy());
 
 
-		// eta, momentum
-		if(mcpart.getPDG() == 211) h_MCpart_pion_p_eta_p->Fill(mcMom.Eta(), mcMom.Mag());
-		if(mcpart.getPDG() == -211) h_MCpart_pion_n_eta_p->Fill(mcMom.Eta(), mcMom.Mag());
-		if(mcpart.getPDG() == 321) h_MCpart_Kaon_p_eta_p->Fill(mcMom.Eta(), mcMom.Mag());
-		if(mcpart.getPDG() == -321) h_MCpart_Kaon_n_eta_p->Fill(mcMom.Eta(), mcMom.Mag());
-		if(mcpart.getPDG() == 2212) h_MCpart_proton_p_eta_p->Fill(mcMom.Eta(), mcMom.Mag());
-		if(mcpart.getPDG() == -2212) h_MCpart_proton_n_eta_p->Fill(mcMom.Eta(), mcMom.Mag());
-		if(mcpart.getPDG() == -11) h_MCpart_Electron_p_eta_p->Fill(mcMom.Eta(), mcMom.Mag());
-		if(mcpart.getPDG() == 11) h_MCpart_Electron_n_eta_p->Fill(mcMom.Eta(), mcMom.Mag());
-
-		if(mcpart.getPDG() == 2112) h_MCpart_Neutron_eta_p->Fill(mcMom.Eta(), mcMom.Mag());
-		if(mcpart.getPDG() == 22) h_MCpart_Gamma_eta_p->Fill(mcMom.Eta(), mcMom.Mag());
-
-		// eta, energy
-		if(mcpart.getPDG() == 211) h_MCpart_Pion_p_eta_E->Fill(mcMom.Eta(), mcpart.getEnergy());
-		if(mcpart.getPDG() == -211) h_MCpart_Pion_n_eta_E->Fill(mcMom.Eta(), mcpart.getEnergy());
-		if(mcpart.getPDG() == 321) h_MCpart_Kaon_p_eta_E->Fill(mcMom.Eta(), mcpart.getEnergy());
-		if(mcpart.getPDG() == -321) h_MCpart_Kaon_n_eta_E->Fill(mcMom.Eta(), mcpart.getEnergy());
-		if(mcpart.getPDG() == 2212) h_MCpart_Proton_p_eta_E->Fill(mcMom.Eta(), mcpart.getEnergy());
-		if(mcpart.getPDG() == -2212) h_MCpart_Proton_n_eta_E->Fill(mcMom.Eta(), mcpart.getEnergy());
-		if(mcpart.getPDG() == -11) h_MCpart_Electron_p_eta_E->Fill(mcMom.Eta(), mcpart.getEnergy());
-		if(mcpart.getPDG() == 11) h_MCpart_Electron_n_eta_E->Fill(mcMom.Eta(), mcpart.getEnergy());
-
-		if(mcpart.getPDG() == 2112) h_MCpart_Neutron_eta_E->Fill(mcMom.Eta(), mcpart.getEnergy());
-		if(mcpart.getPDG() == 22) h_MCpart_Gamma_eta_E->Fill(mcMom.Eta(), mcpart.getEnergy());
-
-
 		// Generated MC particles
 		if(mcpart.getGeneratorStatus()==1)
 		{
 			h_MCpart_gen_mass->Fill(mcpart.getMass());
-			h_MCpart_gen_charge->Fill(mcpart.getCharge());
-			h_MCpart_gen_E->Fill(mcpart.getEnergy());
-			h_MCpart_gen_p->Fill(mcMom.Mag());
-			h_MCpart_gen_pT->Fill(mcMom.Pt());
-
-			h_MCpart_gen_eta->Fill(mcMom.Eta());
-			h_MCpart_gen_etaphi->Fill(mcMom.Eta(), mcMom.Phi());
-
-			h_MCpart_gen_xy->Fill(mcStart.x(), mcStart.y());
-			h_MCpart_gen_zr->Fill(mcStart.z(), mcStart.Pt());
-
-			h_MCpart_gen_end_p->Fill(mcMomEnd.Mag());
-			h_MCpart_gen_end_pT->Fill(mcMomEnd.Pt());
-
-			h_MCpart_gen_posEnd_xy->Fill(mcEnd.x(), mcEnd.y());
-			h_MCpart_gen_posEnd_zr->Fill(mcEnd.z(), mcEnd.Pt());
 
 			nMCpart_gen++;
 		}
@@ -532,22 +419,6 @@ int MakeEvent(TTree *tree, unsigned ev)
 		if(mcpart.getGeneratorStatus()==0)
 		{
 			h_MCpart_sec_mass->Fill(mcpart.getMass());
-			h_MCpart_sec_charge->Fill(mcpart.getCharge());
-			h_MCpart_sec_E->Fill(mcpart.getEnergy());
-			h_MCpart_sec_p->Fill(mcMom.Mag());
-			h_MCpart_sec_pT->Fill(mcMom.Pt());
-
-			h_MCpart_sec_eta->Fill(mcMom.Eta());
-			h_MCpart_sec_etaphi->Fill(mcMom.Eta(), mcMom.Phi());
-
-			h_MCpart_sec_xy->Fill(mcStart.x(), mcStart.y());
-			h_MCpart_sec_zr->Fill(mcStart.z(), mcStart.Pt());
-
-			h_MCpart_sec_end_p->Fill(mcMomEnd.Mag());
-			h_MCpart_sec_end_pT->Fill(mcMomEnd.Pt());
-
-			h_MCpart_sec_posEnd_xy->Fill(mcEnd.x(), mcEnd.y());
-			h_MCpart_sec_posEnd_zr->Fill(mcEnd.z(), mcEnd.Pt());
 
 			nMCpart_sec++;
 
@@ -581,82 +452,11 @@ int MakeEvent(TTree *tree, unsigned ev)
 				if(!mcpart_parent.isCreatedInSimulation())	parentIsPrimary = true;
 			}*/
 
-			// MC particles - 1st generation daughters
-			if(parentIsPrimary)
-			{
-				h_MCpart_1stgen_daughter_mass->Fill(mcpart.getMass());
-				h_MCpart_1stgen_daughter_charge->Fill(mcpart.getCharge());
-				h_MCpart_1stgen_daughter_E->Fill(mcpart.getEnergy());
-				h_MCpart_1stgen_daughter_p->Fill(mcMom.Mag());
-				h_MCpart_1stgen_daughter_pT->Fill(mcMom.Pt());
-
-				h_MCpart_1stgen_daughter_eta->Fill(mcMom.Eta());
-				h_MCpart_1stgen_daughter_etaphi->Fill(mcMom.Eta(), mcMom.Phi());
-
-				h_MCpart_1stgen_daughter_xy->Fill(mcStart.x(), mcStart.y());
-				h_MCpart_1stgen_daughter_zr->Fill(mcStart.z(), mcStart.Pt());
-
-				h_MCpart_1stgen_daughter_end_p->Fill(mcMomEnd.Mag());
-				h_MCpart_1stgen_daughter_end_pT->Fill(mcMomEnd.Pt());
-
-				h_MCpart_1stgen_daughter_posEnd_xy->Fill(mcEnd.x(), mcEnd.y());
-				h_MCpart_1stgen_daughter_posEnd_zr->Fill(mcEnd.z(), mcEnd.Pt());
-			}
 
 			delete parents_data;
 			delete daughters_data;
 
 		}	// Secondary MC particles
-
-		// Make MC particle pairs
-
-		for (unsigned mc_iter2 = 0; mc_iter2 < MCParticles_data->size(); ++mc_iter2) {
-
-			edm4hep::MCParticleData mcpart_data2 =  MCParticles_data->at(mc_iter2);
-
-
-			edm4hep::MCParticle mcpart2 = GetMCParticle(mcpart_data2);
-
-			TVector3 mcMom2(mcpart2.getMomentum().x, mcpart2.getMomentum().y, mcpart2.getMomentum().z);
-			TVector3 mcMomEnd2(mcpart2.getMomentumAtEndpoint ().x, mcpart2.getMomentumAtEndpoint ().y, mcpart2.getMomentumAtEndpoint ().z);
-			TVector3 mcStart2(mcpart2.getVertex().x, mcpart2.getVertex().y, mcpart2.getVertex().z);
-			TVector3 mcEnd2(mcpart2.getEndpoint().x, mcpart2.getEndpoint().y, mcpart2.getEndpoint().z);
-
-			//if(mcMom2.Eta()<-4.0 ||  mcMom2.Eta()>-1.0)	continue;
-			if(mcStart2.z()<cutLayerZ)	continue;
-			if(mcpart2.getPDG() == 22)	continue;
-			if(mcpart2.getPDG() == 11)	continue;
-			if(mcpart2.getPDG() == -11)	continue;
-			if(mcpart2.getPDG() == 111)	continue;
-			if(mcpart2.getPDG() == 221)	continue;
-
-			//if(mcMom2.Mag()<1)	continue; // >1 GeV/c^{2}
-			//if(mcpart2.getEnergy()<1)	continue; // >1 GeV/c^{2}
-
-			if(mc_iter==mc_iter2)	continue;
-
-			TVector3 mcProjPos2 = projTrackZ(mcMom2.Eta(), mcMom2.Phi(), projLayerZ, mcStart2);
-
-			TVector3 diffVect = mcProjPos-mcProjPos2;
-			diffVect.SetMag(diffVect.Mag()/10.0); // convert [mm]->[cm]
-/*
-			cout<<"proj x = "<<mcProjPos.x()<<"\ty = "<<mcProjPos.y()<<"\tz = "<<mcProjPos.z()<<endl;
-			cout<<"proj2 x = "<<mcProjPos2.x()<<"\ty = "<<mcProjPos2.y()<<"\tz = "<<mcProjPos2.z()<<endl;
-			cout<<"delta x = "<<diffVect.x()<<"\ty = "<<diffVect.y()<<"\tz = "<<diffVect.z()<<endl;
-*/
-			h_MCpart_eta_deltaRxy->Fill(mcMom.Eta(), diffVect.Pt());
-			if(mcpart.getPDG() == 2112)	h_MCpart_Neutron_eta_deltaRxy->Fill(mcMom.Eta(), diffVect.Pt());
-
-			if(mcpart.getGeneratorStatus()==1 && mcpart2.getGeneratorStatus()==1)
-			{
-				h_MCpart_gen_eta_deltaRxy->Fill(mcMom.Eta(), diffVect.Pt());
-				if(mcpart.getPDG() == 2112)	h_MCpart_gen_Neutron_eta_deltaRxy->Fill(mcMom.Eta(), diffVect.Pt());
-			}
-
-		} // MCParticles loop 2
-
-		h_MCpart_eta_norm->Fill(mcMom.Eta());
-		if(mcpart.getPDG() == 2112) h_MCpart_Neutron_eta_norm->Fill(mcMom.Eta());
 
 		if(mcpart.getGeneratorStatus()==1)
 		{
@@ -689,10 +489,6 @@ int MakeEvent(TTree *tree, unsigned ev)
 	h_MCpart_nSec->Fill(nMCpart_sec);
 
 
-	h_temp_depth_nHCal_z->Reset();
-	h_temp_depth_nHCal_hit_Esum_z->Reset();
-
-
 	//if(!nHCal_hits_frame.isValid())
 	if(!nHCal_data)
 		cout<<"HcalEndcapNHits does not exist!"<<endl;
@@ -722,13 +518,6 @@ int MakeEvent(TTree *tree, unsigned ev)
 			h_nHCal_hit_pos_z->Fill(hit_nHCal.getPosition().z);
 			h_nHCal_hit_pos_xy->Fill(hit_nHCal.getPosition().x, hit_nHCal.getPosition().y);
 
-			// depth study
-			h_temp_depth_nHCal_z->Fill(hit_nHCal.getPosition().z/10);
-			h_temp_depth_nHCal_hit_Esum_z->Fill(hit_nHCal.getPosition().z/10, hit_nHCal.getEnergy());
-
-			h_depth_nHCal_hit_E_z->Fill(hit_nHCal.getPosition().z/10, hit_nHCal.getEnergy());
-
-			//h_depth_nHCal_nhits_z->Fill(hit_nHCal.getPosition().z, nHCal_data->size());
 
 			vector<edm4hep::CaloHitContributionData> *contrib_data = new vector<edm4hep::CaloHitContributionData>;
 
@@ -751,18 +540,6 @@ int MakeEvent(TTree *tree, unsigned ev)
 
 		} // HcalEndcapNHits loop
 		
-
-		for (int lbin = 1; lbin <= h_temp_depth_nHCal_z->GetXaxis()->GetNbins(); ++lbin) {
-
-			h_depth_nHCal_nhits_z->Fill(h_temp_depth_nHCal_z->GetBinCenter(lbin), h_temp_depth_nHCal_z->GetBinContent(lbin));
-		}
-
-		//TH1D* h_temp_depth_nHCal_hit_Esum_z_proj = (TH1D *)h_temp_depth_nHCal_hit_Esum_z->ProjectionX("proj", 0, -1, "w");
-
-		for (int lbin = 1; lbin <= h_temp_depth_nHCal_hit_Esum_z->GetXaxis()->GetNbins(); ++lbin) {
-
-			h_depth_nHCal_hit_Esum_z->Fill(h_temp_depth_nHCal_hit_Esum_z->GetBinCenter(lbin), h_temp_depth_nHCal_hit_Esum_z->GetBinContent(lbin));
-		}
 		
 		//delete h_temp_depth_nHCal_hit_Esum_z_proj;
 
