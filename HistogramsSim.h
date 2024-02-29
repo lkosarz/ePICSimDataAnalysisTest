@@ -92,39 +92,6 @@ TH1D *h_MCpart_Neutron_E;
 TH1D *h_MCpart_Gamma_E;
 
 
-// eta, momentum
-TH2D *h_MCpart_pion_p_eta_p;
-TH2D *h_MCpart_pion_n_eta_p;
-TH2D *h_MCpart_Kaon_p_eta_p;
-TH2D *h_MCpart_Kaon_n_eta_p;
-TH2D *h_MCpart_proton_p_eta_p;
-TH2D *h_MCpart_proton_n_eta_p;
-TH2D *h_MCpart_Electron_p_eta_p;
-TH2D *h_MCpart_Electron_n_eta_p;
-
-TH2D *h_MCpart_Neutron_eta_p;
-TH2D *h_MCpart_Gamma_eta_p;
-
-// eta, energy
-TH2D *h_MCpart_Pion_p_eta_E;
-TH2D *h_MCpart_Pion_n_eta_E;
-TH2D *h_MCpart_Kaon_p_eta_E;
-TH2D *h_MCpart_Kaon_n_eta_E;
-TH2D *h_MCpart_Proton_p_eta_E;
-TH2D *h_MCpart_Proton_n_eta_E;
-TH2D *h_MCpart_Electron_p_eta_E;
-TH2D *h_MCpart_Electron_n_eta_E;
-
-TH2D *h_MCpart_Neutron_eta_E;
-TH2D *h_MCpart_Gamma_eta_E;
-
-// pair projection distance
-TH2D *h_MCpart_eta_deltaRxy;
-TH2D *h_MCpart_Neutron_eta_deltaRxy;
-TH1D *h_MCpart_eta_norm;
-TH1D *h_MCpart_Neutron_eta_norm;
-
-
 // Generated MC particles
 TH1D *h_MCpart_gen_mass;
 TH1D *h_MCpart_gen_charge;
@@ -143,54 +110,6 @@ TH1D *h_MCpart_gen_end_pT;
 
 TH2D *h_MCpart_gen_posEnd_xy;
 TH2D *h_MCpart_gen_posEnd_zr;
-
-
-// pair projection distance
-TH2D *h_MCpart_gen_eta_deltaRxy;
-TH2D *h_MCpart_gen_Neutron_eta_deltaRxy;
-TH1D *h_MCpart_gen_eta_norm;
-TH1D *h_MCpart_gen_Neutron_eta_norm;
-
-
-// Secondary MC particles
-TH1D *h_MCpart_sec_mass;
-TH1D *h_MCpart_sec_charge;
-TH1D *h_MCpart_sec_E;
-TH1D *h_MCpart_sec_p;
-TH1D *h_MCpart_sec_pT;
-
-TH1D *h_MCpart_sec_eta;
-TH2D *h_MCpart_sec_etaphi;
-
-TH2D *h_MCpart_sec_xy;
-TH2D *h_MCpart_sec_zr;
-
-TH1D *h_MCpart_sec_end_p;
-TH1D *h_MCpart_sec_end_pT;
-
-TH2D *h_MCpart_sec_posEnd_xy;
-TH2D *h_MCpart_sec_posEnd_zr;
-
-
-// MC particles - 1st generation daughters
-TH1D *h_MCpart_1stgen_daughter_mass;
-TH1D *h_MCpart_1stgen_daughter_charge;
-TH1D *h_MCpart_1stgen_daughter_E ;
-TH1D *h_MCpart_1stgen_daughter_p;
-TH1D *h_MCpart_1stgen_daughter_pT;
-
-TH2D *h_MCpart_1stgen_daughter_etaphi;
-TH1D *h_MCpart_1stgen_daughter_eta;
-
-TH2D *h_MCpart_1stgen_daughter_xy;
-TH2D *h_MCpart_1stgen_daughter_zr;
-
-TH1D *h_MCpart_1stgen_daughter_end_p;
-TH1D *h_MCpart_1stgen_daughter_end_pT;
-
-TH2D *h_MCpart_1stgen_daughter_posEnd_xy;
-TH2D *h_MCpart_1stgen_daughter_posEnd_zr;
-
 
 
 
@@ -300,41 +219,6 @@ void CreateHistogamsSim()
 	h_MCpart_Gamma_E = new TH1D("h_MCpart_Gamma_E", "MC particles #gamma energy; E_{MC} [GeV]; counts", 500, 0.0, 50.0);
 
 
-    // eta, momentum
-	h_MCpart_pion_p_eta_p = new TH2D("h_MCpart_Pion_p_eta_p", "MC particles #pi^{+} #eta vs. momentum; #eta [1]; p_{MC} [GeV/c]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-	h_MCpart_pion_n_eta_p = new TH2D("h_MCpart_Pion_n_eta_p", "MC particles #pi^{-} #eta vs. momentum; #eta [1]; p_{MC} [GeV/c]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-	h_MCpart_Kaon_p_eta_p = new TH2D("h_MCpart_Kaon_p_eta_p", "MC particles K^{+} #eta vs. momentum; #eta [1]; p_{MC} [GeV/c]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-	h_MCpart_Kaon_n_eta_p = new TH2D("h_MCpart_Kaon_n_eta_p", "MC particles K^{-} #eta vs. momentum; #eta [1]; p_{MC} [GeV/c]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-	h_MCpart_proton_p_eta_p = new TH2D("h_MCpart_Proton_p_eta_p", "MC particles p^{+} #eta vs. momentum; #eta [1]; p_{MC} [GeV/c]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-	h_MCpart_proton_n_eta_p = new TH2D("h_MCpart_Proton_n_eta_p", "MC particles p^{-} #eta vs. momentum; #eta [1]; p_{MC} [GeV/c]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-	h_MCpart_Electron_p_eta_p = new TH2D("h_MCpart_Electron_p_eta_p", "MC particles e^{+} #eta vs. momentum; #eta [1]; p_{MC} [GeV/c]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-	h_MCpart_Electron_n_eta_p = new TH2D("h_MCpart_Electron_n_eta_p", "MC particles e^{-} #eta vs. momentum; #eta [1]; p_{MC} [GeV/c]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-
-	h_MCpart_Neutron_eta_p = new TH2D("h_MCpart_Neutron_eta_p", "MC particles n #eta vs. momentum; #eta [1]; p_{MC} [GeV/c]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-	h_MCpart_Gamma_eta_p = new TH2D("h_MCpart_Gamma_eta_p", "MC particles #gamman #eta vs. momentum; #eta [1]; p_{MC} [GeV/c]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-
-
-
-	// eta, energy
-	h_MCpart_Pion_p_eta_E = new TH2D("h_MCpart_Pion_p_eta_E", "MC particles #pi^{+} #eta vs. energy; #eta [1]; E_{MC} [GeV]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-	h_MCpart_Pion_n_eta_E = new TH2D("h_MCpart_Pion_n_eta_E", "MC particles #pi^{-} #eta vs. energy; #eta [1]; E_{MC} [GeV]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-	h_MCpart_Kaon_p_eta_E = new TH2D("h_MCpart_Kaon_p_eta_E", "MC particles K^{+} #eta vs. energy; #eta [1]; E_{MC} [GeV]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-	h_MCpart_Kaon_n_eta_E = new TH2D("h_MCpart_Kaon_n_eta_E", "MC particles K^{-} #eta vs. energy; #eta [1]; E_{MC} [GeV]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-	h_MCpart_Proton_p_eta_E = new TH2D("h_MCpart_Proton_p_eta_E", "MC particles p^{+} #eta vs. energy; #eta [1]; E_{MC} [GeV]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-	h_MCpart_Proton_n_eta_E = new TH2D("h_MCpart_Proton_n_eta_E", "MC particles p^{-} #eta vs. energy; #eta [1]; E_{MC} [GeV]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-	h_MCpart_Electron_p_eta_E = new TH2D("h_MCpart_Electron_p_eta_E", "MC particles e^{+} #eta vs. energy; #eta [1]; E_{MC} [GeV]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-	h_MCpart_Electron_n_eta_E = new TH2D("h_MCpart_Electron_n_eta_E", "MC particles e^{-} #eta vs. energy; #eta [1]; E_{MC} [GeV]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-
-	h_MCpart_Neutron_eta_E = new TH2D("h_MCpart_Neutron_eta_E", "MC particles n #eta vs. energy; #eta [1]; E_{MC} [GeV]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-	h_MCpart_Gamma_eta_E = new TH2D("h_MCpart_Gamma_eta_E", "MC particles #gamma #eta vs. energy; #eta [1]; E_{MC} [GeV]; counts", 200, -10.0, 10.0, 500, 0.0, 50.0);
-
-	// pair projection distance
-	h_MCpart_eta_deltaRxy = new TH2D("h_MCpart_eta_deltaRxy", "MC particles pair #eta vs. #DeltaR_{xy}; #eta [1]; #DeltaR_{xy} [cm]; counts", 200, -10.0, 10.0, 5000, 0.0, 500.0);
-	h_MCpart_Neutron_eta_deltaRxy = new TH2D("h_MCpart_Neutron_eta_deltaRxy", "MC pair neutron+X #eta vs. #DeltaR_{xy}; #eta [1]; #DeltaR_{xy} [cm]; counts", 200, -10.0, 10.0, 5000, 0.0, 500.0);
-
-	h_MCpart_eta_norm = new TH1D("h_MCpart_eta_norm", "MC particle #eta; #eta; counts", 200, -10.0, 10.0);
-	h_MCpart_Neutron_eta_norm = new TH1D("h_MCpart_Neutron_eta_norm", "MC neutron #eta; #eta; counts", 200, -10.0, 10.0);
-
 	// Generated MC particles
 	h_MCpart_gen_mass = new TH1D("h_MCpart_gen_mass", "Generated MC particle mass; m [GeV/c^{2}]; counts", 500, 0.0, 50.0);
     h_MCpart_gen_charge = new TH1D("h_MCpart_gen_charge", "Generated MC particle charge; q; counts", 101, -50.5, 50.5);
@@ -353,54 +237,6 @@ void CreateHistogamsSim()
 
 	h_MCpart_gen_posEnd_xy = new TH2D("h_MCpart_gen_posEnd_xy", "Generated MC particle endpoint position x,y; x [mm]; y [mm]; counts", 1000, -5000.0, 5000.0, 1000, -5000.0, 5000.0);
 	h_MCpart_gen_posEnd_zr = new TH2D("h_MCpart_gen_posEnd_zr", "Generated MC particle endpoint position z,r; z [mm]; r [mm]; counts", 1000, -5000.0, 5000.0, 1000, -5000.0, 5000.0);
-
-
-	// pair projection distance
-	h_MCpart_gen_eta_deltaRxy = new TH2D("h_MCpart_gen_eta_deltaRxy", "Generated MC particles pair #eta vs. #DeltaR_{xy}; #eta [1]; #DeltaR_{xy} [cm]; counts", 200, -10.0, 10.0, 5000, 0.0, 500.0);
-	h_MCpart_gen_Neutron_eta_deltaRxy = new TH2D("h_MCpart_gen_Neutron_eta_deltaRxy", "Generated MC pair neutron+X #eta vs. #DeltaR_{xy}; #eta [1]; #DeltaR_{xy} [cm]; counts", 200, -10.0, 10.0, 5000, 0.0, 500.0);
-
-	h_MCpart_gen_eta_norm = new TH1D("h_MCpart_gen_eta_norm", "Generated MC particle #eta; #eta; counts", 200, -10.0, 10.0);
-	h_MCpart_gen_Neutron_eta_norm = new TH1D("h_MCpart_gen_Neutron_eta_norm", "Generated MC neutron #eta; #eta; counts", 200, -10.0, 10.0);
-
-	// Secondary MC particles
-	h_MCpart_sec_mass = new TH1D("h_MCpart_sec_mass", "Secondary MC particle mass; m [GeV/c^{2}]; counts", 500, 0.0, 50.0);
-    h_MCpart_sec_charge = new TH1D("h_MCpart_sec_charge", "Secondary MC particle charge; q [1]; counts", 101, -50.5, 50.5);
-	h_MCpart_sec_E = new TH1D("h_MCpart_sec_E", "Secondary MC particle energy; E [GeV]; counts", 500, 0.0, 50.0);
-	h_MCpart_sec_p = new TH1D("h_MCpart_sec_p", "Secondary MC particle momentum; p [GeV/c]; counts", 500, 0.0, 50.0);
-	h_MCpart_sec_pT = new TH1D("h_MCpart_sec_pT", "Secondary MC particle transverse momentum; p_{T} [GeV/c]; counts", 500, 0.0, 50.0);
-
-	h_MCpart_sec_eta = new TH1D("h_MCpart_sec_eta", "Secondary MC particle #eta; #eta; counts", 200, -10.0, 10.0);
-	h_MCpart_sec_etaphi = new TH2D("h_MCpart_sec_etaphi", "Secondary MC particle #eta,#phi; #eta; #phi [rad]; counts", 200, -10.0, 10.0, 314, -Pi(), Pi());
-
-	h_MCpart_sec_xy = new TH2D("h_MCpart_sec_xy", "Secondary MC particle position x,y; x [mm]; y [mm]; counts", 1000, -5000.0, 5000.0, 1000, -5000.0, 5000.0);
-	h_MCpart_sec_zr = new TH2D("h_MCpart_sec_zr", "Secondary MC particle position z,r; z [mm]; r [mm]; counts", 1000, -5000.0, 5000.0, 1000, -5000.0, 5000.0);
-
-	h_MCpart_sec_end_p = new TH1D("h_MCpart_sec_end_p", "Secondary MC particle momentum at endpoint; p [GeV/c]; counts", 500, 0.0, 50.0);
-	h_MCpart_sec_end_pT = new TH1D("h_MCpart_sec_end_pT", "Secondary MC particle transverse momentum at endpoint; p [GeV/c]; counts", 500, 0.0, 50.0);
-
-	h_MCpart_sec_posEnd_xy = new TH2D("h_MCpart_sec_posEnd_xy", "Secondary MC particle endpoint position x,y; x [mm]; y [mm]; counts", 1000, -5000.0, 5000.0, 1000, -5000.0, 5000.0);
-	h_MCpart_sec_posEnd_zr = new TH2D("h_MCpart_sec_posEnd_zr", "Secondary MC particle endpoint position z,r; z [mm]; r [mm]; counts", 1000, -5000.0, 5000.0, 1000, -5000.0, 5000.0);
-
-
-	// MC particles - 1st generation daughters
-	h_MCpart_1stgen_daughter_mass = new TH1D("h_MCpart_1stgen_daughter_mass", "1stgen daughter MC mass; m [GeV/c^{2}]; counts", 500, 0.0, 50.0);
-    h_MCpart_1stgen_daughter_charge = new TH1D("h_MCpart_1stgen_daughter_charge", "1stgen daughter MC charge; q [1]; counts", 101, -50.5, 50.5);
-	h_MCpart_1stgen_daughter_E = new TH1D("h_MCpart_1stgen_daughter_E", "1stgen_daughtererated MC particle energy; E [GeV]; counts", 500, 0.0, 50.0);
-	h_MCpart_1stgen_daughter_p = new TH1D("h_MCpart_1stgen_daughter_p", "1st gen daughter MC momentum; p [GeV/c]; counts", 500, 0.0, 50.0);
-	h_MCpart_1stgen_daughter_pT = new TH1D("h_MCpart_1stgen_daughter_pT", "1st gen daughter MC transverse momentum; p_{T} [GeV/c]; counts", 500, 0.0, 50.0);
-
-	h_MCpart_1stgen_daughter_etaphi = new TH2D("h_MCpart_1stgen_daughter_etaphi", "1st gen daughter MC #eta,#phi; #eta; #phi [rad]; counts", 200, -10.0, 10.0, 314, -Pi(), Pi());
-	h_MCpart_1stgen_daughter_eta = new TH1D("h_MCpart_1stgen_daughter_eta", "1st gen daughter MC #eta; #eta; counts", 200, -10.0, 10.0);
-
-	h_MCpart_1stgen_daughter_xy = new TH2D("h_MCpart_1stgen_daughter_xy", "1st gen daughter MC particle position x,y; x [mm]; y [mm]; counts", 1000, -5000.0, 5000.0, 1000, -5000.0, 5000.0);
-	h_MCpart_1stgen_daughter_zr = new TH2D("h_MCpart_1stgen_daughter_zr", "1st gen daughter MC particle position z,r; z [mm]; r [mm]; counts", 1000, -5000.0, 5000.0, 1000, -5000.0, 5000.0);
-
-	h_MCpart_1stgen_daughter_end_p = new TH1D("h_MCpart_1stgen_daughter_end_p", "1st gen daughter MC momentum at endpoint; p [GeV/c]; counts", 200, -50.0, 50.0);
-	h_MCpart_1stgen_daughter_end_pT = new TH1D("h_MCpart_1stgen_daughter_end_pT", "1st gen daughter MC transverse momentum at endpoint; p [GeV/c]; counts", 200, -50.0, 50.0);
-
-	h_MCpart_1stgen_daughter_posEnd_xy = new TH2D("h_MCpart_1stgen_daughter_posEnd_xy", "1st gen daughter MC endpoint position x,y; x [mm]; y [mm]; counts", 1000, -5000.0, 5000.0, 1000, -5000.0, 5000.0);
-    h_MCpart_1stgen_daughter_posEnd_zr = new TH2D("h_MCpart_1stgen_daughter_posEnd_zr", "1st gen daughter MC endpoint position z,r; z [mm]; r [mm]; counts", 1000, -5000.0, 5000.0, 1000, -5000.0, 5000.0);
-
 
 
 	// EcalEndcapNHit
@@ -507,39 +343,6 @@ void DeleteHistogamsSim()
 	delete h_MCpart_Gamma_E;
 
 
-	// eta, momentum
-	delete h_MCpart_pion_p_eta_p;
-	delete h_MCpart_pion_n_eta_p;
-	delete h_MCpart_Kaon_p_eta_p;
-	delete h_MCpart_Kaon_n_eta_p;
-	delete h_MCpart_proton_p_eta_p;
-	delete h_MCpart_proton_n_eta_p;
-	delete h_MCpart_Electron_p_eta_p;
-	delete h_MCpart_Electron_n_eta_p;
-
-	delete h_MCpart_Neutron_eta_p;
-	delete h_MCpart_Gamma_eta_p;
-
-	// eta, energy
-	delete h_MCpart_Pion_p_eta_E;
-	delete h_MCpart_Pion_n_eta_E;
-	delete h_MCpart_Kaon_p_eta_E;
-	delete h_MCpart_Kaon_n_eta_E;
-	delete h_MCpart_Proton_p_eta_E;
-	delete h_MCpart_Proton_n_eta_E;
-	delete h_MCpart_Electron_p_eta_E;
-	delete h_MCpart_Electron_n_eta_E;
-
-	delete h_MCpart_Neutron_eta_E;
-	delete h_MCpart_Gamma_eta_E;
-
-	// pair projection distance
-	delete h_MCpart_eta_deltaRxy;
-	delete h_MCpart_Neutron_eta_deltaRxy;
-	delete h_MCpart_eta_norm;
-	delete h_MCpart_Neutron_eta_norm;
-
-
 	// Generated MC particles
 	delete h_MCpart_gen_mass;
 	delete h_MCpart_gen_charge;
@@ -558,55 +361,6 @@ void DeleteHistogamsSim()
 
 	delete h_MCpart_gen_posEnd_xy;
 	delete h_MCpart_gen_posEnd_zr;
-
-
-	// pair projection distance
-	delete h_MCpart_gen_eta_deltaRxy;
-	delete h_MCpart_gen_Neutron_eta_deltaRxy;
-	delete h_MCpart_gen_eta_norm;
-	delete h_MCpart_gen_Neutron_eta_norm;
-
-
-	// Secondary MC particles
-	delete h_MCpart_sec_mass;
-	delete h_MCpart_sec_charge;
-	delete h_MCpart_sec_E;
-	delete h_MCpart_sec_p;
-	delete h_MCpart_sec_pT;
-
-	delete h_MCpart_sec_eta;
-	delete h_MCpart_sec_etaphi;
-
-	delete h_MCpart_sec_xy;
-	delete h_MCpart_sec_zr;
-
-	delete h_MCpart_sec_end_p;
-	delete h_MCpart_sec_end_pT;
-
-	delete h_MCpart_sec_posEnd_xy;
-	delete h_MCpart_sec_posEnd_zr;
-
-
-	// MC particles - 1st generation daughters
-	delete h_MCpart_1stgen_daughter_mass;
-	delete h_MCpart_1stgen_daughter_charge;
-	delete h_MCpart_1stgen_daughter_E ;
-	delete h_MCpart_1stgen_daughter_p;
-	delete h_MCpart_1stgen_daughter_pT;
-
-	delete h_MCpart_1stgen_daughter_etaphi;
-	delete h_MCpart_1stgen_daughter_eta;
-
-	delete h_MCpart_1stgen_daughter_xy;
-	delete h_MCpart_1stgen_daughter_zr;
-
-	delete h_MCpart_1stgen_daughter_end_p;
-	delete h_MCpart_1stgen_daughter_end_pT;
-
-	delete h_MCpart_1stgen_daughter_posEnd_xy;
-	delete h_MCpart_1stgen_daughter_posEnd_zr;
-
-
 
 
 	// EcalEndcapNHit
