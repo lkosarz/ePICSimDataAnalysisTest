@@ -4,6 +4,16 @@ Analysis of ePIC simulated data. The code is written so that it can be easily co
 - `podio::ROOTFrameReader`
 - `podio::EventStore`
 
+
+## Simplified version
+
+To get a simple branch use the command below. The simple branch is a good starting point.
+
+```Sh
+git co simple
+```
+
+
 ### To run interactively:
 
 ```Sh
