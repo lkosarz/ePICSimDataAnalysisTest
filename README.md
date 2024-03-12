@@ -10,7 +10,7 @@ Analysis of ePIC simulated data. The code is written so that it can be easily co
 To get a simple branch use the command below. The simple branch is a good starting point.
 
 ```Sh
-git co simple
+git checkout simple
 ```
 
 
