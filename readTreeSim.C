@@ -406,7 +406,6 @@ int MakeEvent(TTree *tree, unsigned ev)
 		// Secondary MC particles
 		if(mcpart.getGeneratorStatus()==0)
 		{
-			h_MCpart_sec_mass->Fill(mcpart.getMass());
 
 			nMCpart_sec++;
 
@@ -448,8 +447,6 @@ int MakeEvent(TTree *tree, unsigned ev)
 
 		if(mcpart.getGeneratorStatus()==1)
 		{
-			h_MCpart_gen_eta_norm->Fill(mcMom.Eta());
-			if(mcpart.getPDG() == 2112) h_MCpart_gen_Neutron_eta_norm->Fill(mcMom.Eta());
 		}
 
 		delete parents_check;
