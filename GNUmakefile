@@ -1,5 +1,5 @@
-OBJS = readTreeSimMain.C DictOutput.cxx
-EXE = readTreeSimMain
+OBJS = readFrameRootMain.C DictOutput.cxx
+EXE = readFrameRootMain
 
 ROOTCFLAGS    = $(shell root-config --cflags)
 ROOTLIBS      = $(shell root-config --libs)

@@ -8,10 +8,15 @@
 #ifndef BASICUTIL_H_
 #define BASICUTIL_H_
 
+#include <string>
+#include <string_view>
 
 #include <TMath.h>
 #include "TVector.h"
 
+void PrintStringVector(vector<string> vec);
+void PrintStringVector(vector<string> string_view);
+void PrintStringViewVector(vector<string_view> vec);
 
 double *calculateDirection(double eta, double phi, double r = 1.0);
 TVector3 calculateDirectionVec(double eta, double phi, double r = 1.0);
@@ -20,6 +25,27 @@ TVector3 projTrack(double eta, double phi, double r = 80000.0, TVector3 start = 
 TVector3 projTrackZ(double eta, double phi, double z = -3950.0, TVector3 start = TVector3(0.0, 0.0, 0.0)); // eta, phi, zmax[mm]
 
 
+void PrintStringVector(vector<string> vec)
+{
+	for (int i = 0; i < vec.size(); ++i) {
+		cout<<vec[i]<<endl;
+	}
+	cout<<endl;
+}
+void PrintStringVector(vector<string_view> vec)
+{
+	for (int i = 0; i < vec.size(); ++i) {
+		cout<<vec[i]<<endl;
+	}
+	cout<<endl;
+}
+void PrintStringViewVector(vector<string_view> vec)
+{
+	for (int i = 0; i < vec.size(); ++i) {
+		cout<<vec[i]<<endl;
+	}
+	cout<<endl;
+}
 
 double *calculateDirection(double eta, double phi, double r)
 {
