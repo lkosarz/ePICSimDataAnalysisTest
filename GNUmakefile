@@ -1,11 +1,11 @@
-OBJS = readTreeSimMain.C DictOutput.cxx
-EXE = readTreeSimMain
+OBJS = readFrameRootMain.C DictOutput.cxx
+EXE = readFrameRootMain
 
 ROOTCFLAGS    = $(shell root-config --cflags)
 ROOTLIBS      = $(shell root-config --libs)
 ROOTGLIBS     = $(shell root-config --glibs)
 
-DICTHEADERS = edm4hep/MCParticleData.h edm4hep/SimCalorimeterHitData.h edm4hep/CaloHitContributionData.h LinkDef.h
+DICTHEADERS = edm4hep/MCParticleData.h edm4hep/SimCalorimeterHitData.h edm4hep/CaloHitContributionData.h
 
 INCFLAGS = -I${ROOTSYS}/include -I${ROOTSYS}/include/root/
 LDFLAGS = -L${ROOTSYS}/lib -L${ROOTSYS}/lib/root -lpodio -ledm4hep -ledm4hepDict -ledm4eic -ledm4eicDict -lpodioRootIO -lpodioDict -lpodioRootIODict -lfmt
