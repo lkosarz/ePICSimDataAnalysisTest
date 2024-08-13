@@ -6,10 +6,12 @@ EICSHELL=eic-shell
 ENV_VARS=$(cat <<-END
 
 ## Set environment
-source /opt/detector/setup.sh
+source /opt/detector/epic-main/bin/thisepic.sh
+#source /opt/detector/setup.sh
 
 #export LOCAL_PREFIX='pwd'
 
+#source ${LOCAL_PREFIX}/install/bin/thisepic.sh
 #source ${LOCAL_PREFIX}/epic/install/setup.sh
 
 ### Export detector libraries
