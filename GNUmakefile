@@ -16,7 +16,7 @@ LDFLAGS = -L${ROOTSYS}/lib -L${ROOTSYS}/lib/root -lpodio -ledm4hep -ledm4hepDict
 #-L${PODIO}/lib
 
 #CXX = g++ -m32 -std=c++20
-CXX = g++ 
+CXX = g++ -std=c++20
 FLAGS = -Wall -g -fPIC $(INCFLAGS) $(LDFLAGS)
 
 COMPILE = $(CXX) $(FLAGS) -c 
