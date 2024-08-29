@@ -79,6 +79,8 @@ R__LOAD_LIBRARY(libfmt.so)
 //#include <eic/vector_utils.h>
 //#include "dd4pod/CalorimeterHitData.h"
 
+#include "HistogramsSim.h"
+
 #include "FileList.h"
 #include "EICutil.h"
 #include "BasicUtil.h"
@@ -99,6 +101,9 @@ using namespace edm4hep;
 
 bool printEvNum = true;
 bool debug = true;
+
+int readFrameRoot(TString list = "data/filesSim_hcal_only_test.list", TString ofname = "output/output_test.root", long nevents = -1)
+int MakeEvent(podio::ROOTReader *reader, unsigned ev);
 
 int readFrameRoot(TString list = "data/filesSim_hcal_only_test.list", TString ofname = "output/output_test.root", long nevents = -1)
 {
@@ -149,96 +154,10 @@ int readFrameRoot(TString list = "data/filesSim_hcal_only_test.list", TString of
 
 	for(unsigned ev=0; ev<nEvents; ++ev) {
 
-	    // grab frame
-	    auto frame = podio::Frame(reader->readNextEntry(podio::Category::Event));
 
-	    if(ev == 0)
-	    {
-		    std::vector<std::string> collections_names = frame.getAvailableCollections();
-			PrintStringVector(collections_names);
-	    }
+		MakeEvent(reader, ev);
 
-		//reader->goToEvent(ev);
-		//reader->readEvent();
-		if(printEvNum) std::cout<<"reading event "<<ev<<std::endl;
-
-		//store->endOfEvent();
-
-		// grab collections
-		auto& nHCal_hitscoll = frame.get<edm4hep::SimCalorimeterHitCollection>("HcalEndcapNHits");
-		auto& MCParticles_coll  = frame.get<edm4hep::MCParticleCollection>("MCParticles");
-
-		if(!nHCal_hitscoll.isValid())
-			cout<<"HcalEndcapNHits does not exist!"<<endl;
-
-		if(debug) cout<<"SimCalorimeterHitCollection size = "<<nHCal_hitscoll.size()<<endl;
-
-		for (unsigned bhchit = 0; bhchit < nHCal_hitscoll.size(); ++bhchit) {
-
-			SimCalorimeterHit nHCal_hit = nHCal_hitscoll.at(bhchit);
-
-			if(!nHCal_hit.isAvailable())
-				cout<<"SimCalorimeterHit does not exist! index = "<<nHCal_hit<<endl;
-
-			if(debug) cout<<"nHCal_hitscoll energy = "<<nHCal_hit.getEnergy()<<endl;
-
-
-			auto contrib = nHCal_hit.getContributions();
-
-			//if(contrib==NULL)
-			//	cout<<"Contributions vector does not exist!"<<endl;
-
-			if(debug) cout<<"contributions size = "<<contrib.size()<<endl;
-
-			for (unsigned c = 0; c < contrib.size(); ++c) {
-
-				//if(contrib[c]==NULL)
-				if(!contrib.at(c).isAvailable())
-					cout<<"Contribution does not exist! index = "<<c<<endl;
-
-				if(debug) cout<<"hit time = "<<contrib.at(c).getTime()<<endl;
-
-			} // contributions loop
-
-		} // HcalEndcapNHits loop
-/*
-		auto& nHCal_hits_store  = store->get<edm4hep::SimCalorimeterHitCollection>("HcalEndcapNHits");
-		auto& MCParticles_store  = store->get<edm4hep::MCParticleCollection>("MCParticles");
-
-		if(!nHCal_hits_store.isValid())
-			cout<<"SimCalorimeterHitCollection does not exist!"<<endl;
-
-		if(debug) cout<<"SimCalorimeterHit size = "<<nHCal_hits_store.size()<<endl;
-
-			for (unsigned hit_iter = 0; hit_iter < nHCal_hits_store.size(); ++hit_iter) {
-
-				SimCalorimeterHit hit_s =  nHCal_hits_store[hit_iter];
-
-				if(!hit_s.isAvailable())
-					cout<<"SimCalorimeterHit does not exist! index = "<<hit_s<<endl;
-
-
-				auto contrib = hit_s.getContributions();
-
-				//if(contrib==NULL)
-				//	cout<<"Contributions vector does not exist!"<<endl;
-
-				//if(debug) cout<<"contributions size = "<<contrib.size()<<endl;
-
-				for (unsigned c = 0; c < contrib.size(); ++c) {
-
-					//if(contrib[c]==NULL)
-					if(!contrib.at(c).isAvailable())
-						cout<<"Contribution does not exist! index = "<<c<<endl;
-
-					//if(debug) cout<<"hit time = "<<contrib.at(c).getTime()<<endl;
-
-				}
-
-
-			} // HcalEndcapNHits loop
-*/
-			if(debug) std::cout<<"End of event"<<std::endl;
+		if(debug) std::cout<<"End of event"<<std::endl;
 
 		//store->clear();
 		//reader->endOfEvent();
@@ -249,4 +168,102 @@ int readFrameRoot(TString list = "data/filesSim_hcal_only_test.list", TString of
 
 	return 1;
 
+}
+
+
+int MakeEvent(podio::ROOTReader *reader, unsigned ev)
+{
+
+
+    // grab frame
+    auto frame = podio::Frame(reader->readNextEntry(podio::Category::Event));
+
+    if(ev == 0)
+    {
+	    std::vector<std::string> collections_names = frame.getAvailableCollections();
+		PrintStringVector(collections_names);
+    }
+
+	//reader->goToEvent(ev);
+	//reader->readEvent();
+	if(printEvNum) std::cout<<"reading event "<<ev<<std::endl;
+
+	//store->endOfEvent();
+
+	// grab collections
+	auto& nHCal_hitscoll = frame.get<edm4hep::SimCalorimeterHitCollection>("HcalEndcapNHits");
+	auto& MCParticles_coll  = frame.get<edm4hep::MCParticleCollection>("MCParticles");
+
+	if(!nHCal_hitscoll.isValid())
+		cout<<"HcalEndcapNHits does not exist!"<<endl;
+
+	if(debug) cout<<"SimCalorimeterHitCollection size = "<<nHCal_hitscoll.size()<<endl;
+
+	for (unsigned bhchit = 0; bhchit < nHCal_hitscoll.size(); ++bhchit) {
+
+		SimCalorimeterHit nHCal_hit = nHCal_hitscoll.at(bhchit);
+
+		if(!nHCal_hit.isAvailable())
+			cout<<"SimCalorimeterHit does not exist! index = "<<nHCal_hit<<endl;
+
+		if(debug) cout<<"nHCal_hitscoll energy = "<<nHCal_hit.getEnergy()<<endl;
+
+
+		auto contrib = nHCal_hit.getContributions();
+
+		//if(contrib==NULL)
+		//	cout<<"Contributions vector does not exist!"<<endl;
+
+		if(debug) cout<<"contributions size = "<<contrib.size()<<endl;
+
+		for (unsigned c = 0; c < contrib.size(); ++c) {
+
+			//if(contrib[c]==NULL)
+			if(!contrib.at(c).isAvailable())
+				cout<<"Contribution does not exist! index = "<<c<<endl;
+
+			if(debug) cout<<"hit time = "<<contrib.at(c).getTime()<<endl;
+
+		} // contributions loop
+
+	} // HcalEndcapNHits loop
+/*
+	auto& nHCal_hits_store  = store->get<edm4hep::SimCalorimeterHitCollection>("HcalEndcapNHits");
+	auto& MCParticles_store  = store->get<edm4hep::MCParticleCollection>("MCParticles");
+
+	if(!nHCal_hits_store.isValid())
+		cout<<"SimCalorimeterHitCollection does not exist!"<<endl;
+
+	if(debug) cout<<"SimCalorimeterHit size = "<<nHCal_hits_store.size()<<endl;
+
+		for (unsigned hit_iter = 0; hit_iter < nHCal_hits_store.size(); ++hit_iter) {
+
+			SimCalorimeterHit hit_s =  nHCal_hits_store[hit_iter];
+
+			if(!hit_s.isAvailable())
+				cout<<"SimCalorimeterHit does not exist! index = "<<hit_s<<endl;
+
+
+			auto contrib = hit_s.getContributions();
+
+			//if(contrib==NULL)
+			//	cout<<"Contributions vector does not exist!"<<endl;
+
+			//if(debug) cout<<"contributions size = "<<contrib.size()<<endl;
+
+			for (unsigned c = 0; c < contrib.size(); ++c) {
+
+				//if(contrib[c]==NULL)
+				if(!contrib.at(c).isAvailable())
+					cout<<"Contribution does not exist! index = "<<c<<endl;
+
+				//if(debug) cout<<"hit time = "<<contrib.at(c).getTime()<<endl;
+
+			}
+
+
+		} // HcalEndcapNHits loop
+
+
+	return 1;
 }
